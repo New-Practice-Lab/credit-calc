@@ -18,7 +18,7 @@ Scala, Clojure).
 
 The Fact Graph repo also contains the
 [Architectural Decision Record (ADR)](https://github.com/IRS-Public/fact-graph/blob/main/docs/fact-graph-3.1-adr.md),
-for version 3.1, which provides context on the intent ahd history of Fact Graph.
+for version 3.1, which provides context on the intent and history of Fact Graph.
 
 ### Credit Calc components
 
@@ -31,13 +31,6 @@ The basic components of credit-calc are:
 3. A project-specific JavaScript file that uses form data and the Fact Graph
    engine to get and set values in the Fact Dictionaries.
 
-## Note for Claude users
-
-Claude does not yet recognize the AGENTS.md standards, preferring CLAUDE.md.
-
-If you're using Claude, you can [add a startup hook](https://github.com/anthropics/claude-code/issues/6235#issuecomment-3588785967)
-in `~/.claude/settings.json` as a workaround.
-
 ## Coding style
 
 - HTML should be styled using the US Web Design System (USWDS) 3.0, which is
@@ -49,5 +42,3 @@ documented here: https://designsystem.digital.gov/
 ## Development environment
 
 ## Testing instructions
-
-
