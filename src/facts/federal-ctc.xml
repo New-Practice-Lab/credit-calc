@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FactDictionaryModule>
+  <Facts>
+
+  <!-- ==================================================== -->
+  <!-- FED CTC MAX REFUNDABLE AMT CONSTANT (2025 Tax Year)  -->
+  <!-- ==================================================== -->
+  <Fact path="/federalCtcMaxRefundAmountPerChild">
+    <Name>Federal CTC Maximum Refundable Amount Per Child</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>1700</Dollar>
+    </Derived>
+  </Fact>
+
+  <!-- ============================================= -->
+  <!-- CALCULATE DERIVED FACT FOR FED CTC ELIGIBILTY -->
+  <!-- This iteration assumes that all qualifying    -->
+  <!-- children have valid SSNs.                     -->
+  <!-- ============================================= -->
+  <Fact path="/filersHaveValidIdsForFederalCtc">
+    <Name>Filers Have Valid Tax Ids for Federal CTC</Name>
+    <Description>Filer(s) have Tax Ids required to qualify for federal CTC</Description>
+    <Derived>
+      <Switch>
+        <Case>
+          <When>
+            <Dependency module="creditCalc" path="/isFilingStatusMFJ"/>
+          </When>
+          <Then>
+            <!-- When MFJ, at least one filer needs SSN for CTC -->
+            <Any>
+              <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
+              <Dependency module="creditCalc" path="/secondaryFilerHasValidSSN"/>
+            </Any>
+          </Then>
+        </Case>
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <!-- Only primary filer needs valid SSN for other filing statuses -->
+            <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  <!-- ============================================== -->
+  <!-- MAXIMUM REFUNDABLE FEDERAL CTC AMOUNT          -->
+  <!-- ============================================== -->
+  <Fact path="/federalCtcMaxRefundableAmount">
+    <Name>Maximum Refundable Federal CTC Amount</Name>
+    <Description>The maximum refundable federal CTC amount based on eligibility and number of qualifying children. Returns $0 if not eligible.</Description>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Switch>
+        <!-- Check if filer has valid IDs for federal CTC -->
+        <Case>
+          <When>
+            <Dependency path="/filersHaveValidIdsForFederalCtc"/>
+          </When>
+          <Then>
+            <!-- Eligible - multiply max refundable amount per child by number of children -->
+            <Multiply>
+              <Dependency path="/federalCtcMaxRefundAmountPerChild"/>
+              <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+            </Multiply>
+          </Then>
+        </Case>
+        <!-- Not eligible - return $0 -->
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <Dollar>0</Dollar>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  </Facts>
+</FactDictionaryModule>
