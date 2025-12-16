@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FactDictionaryModule>
+  <Facts>
+
+  <!-- ================================================== -->
+  <!-- CALCULATE DERIVED FACT FOR SSN FED EITC ELIGIBILTY -->
+  <!-- ================================================== -->
+  <Fact path="/filersHaveValidIdsForFederalEitc">
+    <Name>Filers Have Valid SSNs for Federal EITC</Name>
+    <Description>Filer(s) have SSN to qualify for federal EITC</Description>
+    <Derived>
+      <Switch>
+        <Case>
+          <When>
+            <Dependency module="creditCalc" path="/isFilingStatusMFJ"/>
+          </When>
+          <Then>
+            <!-- When MFJ, both filers need SSN for federal EITC -->
+            <All>
+              <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
+              <Dependency module="creditCalc" path="/secondaryFilerHasValidSSN"/>
+            </All>
+          </Then>
+        </Case>
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <!-- Only primary filer needs valid SSN for other filing statuses -->
+            <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  <!-- ================================================ -->
+  <!-- FED EITC INCOME LIMIT CONSTANTS (2025 Tax Year)  -->
+  <!-- ================================================ -->
+  <Fact path="/eitcInvestmentIncomeLimit">
+    <Name>EITC Investment Income Limit</Name>
+    <Description>Maximum investment income allowed for EITC eligibility (2025)</Description>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>11950</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcMfjLimitWith0Children">
+    <Name>EITC Income Limit (MFJ, 0 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>26214</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcSelfLimitWith0Children">
+    <Name>EITC Income Limit (Other, 0 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>19104</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcMfjLimitWith1Child">
+    <Name>EITC Income Limit (MFJ, 1 Child)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>57554</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcSelfLimitWith1Child">
+    <Name>EITC Income Limit (Other, 1 Child)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>50434</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcMfjLimitWith2Children">
+    <Name>EITC Income Limit (MFJ, 2 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>64430</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcSelfLimitWith2Children">
+    <Name>EITC Income Limit (Other, 2 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>57310</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcMfjLimitWith3OrMoreChildren">
+    <Name>EITC Income Limit (MFJ, 3+ Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>68675</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcSelfLimitWith3OrMoreChildren">
+    <Name>EITC Income Limit (Other, 3+ Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>61555</Dollar>
+    </Derived>
+  </Fact>
+
+  <!-- ============================================== -->
+  <!-- FED EITC MAX CREDIT CONSTANTS (2025 Tax Year)  -->
+  <!-- ============================================== -->
+  <Fact path="/eitcCreditLimitWith0Children">
+    <Name>EITC Credit Limit (0 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>649</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcCreditLimitWith1Child">
+    <Name>EITC Credit Limit (1 Child)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>4328</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcCreditLimitWith2Children">
+    <Name>EITC Credit Limit (2 Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>7152</Dollar>
+    </Derived>
+  </Fact>
+
+  <Fact path="/eitcCreditLimitWith3OrMoreChildren">
+    <Name>EITC Credit Limit (3+ Children)</Name>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Dollar>8046</Dollar>
+    </Derived>
+  </Fact>
+
+  <!-- ============================================ -->
+  <!-- INCOME LIMIT DETERMINATION                   -->
+  <!-- ============================================ -->
+  <Fact path="/eitcIncomeLimit">
+    <Name>EITC Income Limit</Name>
+    <Description>The applicable income limit based on filing status and number of qualifying children</Description>
+    <Derived>
+      <Switch>
+        <!-- MFJ Limits -->
+        <Case>
+          <When>
+            <Dependency module="creditCalc" path="/isFilingStatusMFJ"/>
+          </When>
+          <Then>
+            <Switch>
+              <Case>
+                <When>
+                  <GreaterThanOrEqual>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>3</Int>
+                    </Right>
+                  </GreaterThanOrEqual>
+                </When>
+                <Then>
+                  <Dependency path="/eitcMfjLimitWith3OrMoreChildren"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <Equal>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>2</Int>
+                    </Right>
+                  </Equal>
+                </When>
+                <Then>
+                  <Dependency path="/eitcMfjLimitWith2Children"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <Equal>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>1</Int>
+                    </Right>
+                  </Equal>
+                </When>
+                <Then>
+                  <Dependency path="/eitcMfjLimitWith1Child"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <True/>
+                </When>
+                <Then>
+                  <Dependency path="/eitcMfjLimitWith0Children"/>
+                </Then>
+              </Case>
+            </Switch>
+          </Then>
+        </Case>
+        <!-- Other Filing Status Limits -->
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <Switch>
+              <Case>
+                <When>
+                  <GreaterThanOrEqual>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>3</Int>
+                    </Right>
+                  </GreaterThanOrEqual>
+                </When>
+                <Then>
+                  <Dependency path="/eitcSelfLimitWith3OrMoreChildren"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <Equal>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>2</Int>
+                    </Right>
+                  </Equal>
+                </When>
+                <Then>
+                  <Dependency path="/eitcSelfLimitWith2Children"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <Equal>
+                    <Left>
+                      <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+                    </Left>
+                    <Right>
+                      <Int>1</Int>
+                    </Right>
+                  </Equal>
+                </When>
+                <Then>
+                  <Dependency path="/eitcSelfLimitWith1Child"/>
+                </Then>
+              </Case>
+              <Case>
+                <When>
+                  <True/>
+                </When>
+                <Then>
+                  <Dependency path="/eitcSelfLimitWith0Children"/>
+                </Then>
+              </Case>
+            </Switch>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  <!-- ======================================================= -->
+  <!-- ESTIMATED FEDERAL EITC (without eligibility check)      -->
+  <!-- ======================================================= -->
+  <Fact path="/federalEitcEstimatedAmount">
+    <Name>Estimated Federal EITC Amount</Name>
+    <Description>The estimated federal EITC amount based on number of qualifying children, regardless of tax ID eligibility.</Description>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Switch>
+        <Case>
+          <When>
+            <GreaterThanOrEqual>
+              <Left>
+                <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+              </Left>
+              <Right>
+                <Int>3</Int>
+              </Right>
+            </GreaterThanOrEqual>
+          </When>
+          <Then>
+            <Dependency path="/eitcCreditLimitWith3OrMoreChildren"/>
+          </Then>
+        </Case>
+        <Case>
+          <When>
+            <Equal>
+              <Left>
+                <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+              </Left>
+              <Right>
+                <Int>2</Int>
+              </Right>
+            </Equal>
+          </When>
+          <Then>
+            <Dependency path="/eitcCreditLimitWith2Children"/>
+          </Then>
+        </Case>
+        <Case>
+          <When>
+            <Equal>
+              <Left>
+                <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+              </Left>
+              <Right>
+                <Int>1</Int>
+              </Right>
+            </Equal>
+          </When>
+          <Then>
+            <Dependency path="/eitcCreditLimitWith1Child"/>
+          </Then>
+        </Case>
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <Dependency path="/eitcCreditLimitWith0Children"/>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  <!-- ============================================== -->
+  <!-- MAXIMUM FEDERAL EITC AMOUNT                    -->
+  <!-- ============================================== -->
+  <Fact path="/federalEitcMaxAmount">
+    <Name>Maximum Federal EITC Amount</Name>
+    <Description>The maximum federal EITC amount based on eligibility and number of qualifying children. Returns $0 if not eligible.</Description>
+    <TaxYear>2025</TaxYear>
+    <Derived>
+      <Switch>
+        <!-- Check if filer has valid IDs for federal EITC -->
+        <Case>
+          <When>
+            <Dependency path="/filersHaveValidIdsForFederalEitc"/>
+          </When>
+          <Then>
+            <!-- Eligible - return estimated amount -->
+            <Dependency path="/federalEitcEstimatedAmount"/>
+          </Then>
+        </Case>
+        <!-- Not eligible - return $0 -->
+        <Case>
+          <When>
+            <True/>
+          </When>
+          <Then>
+            <Dollar>0</Dollar>
+          </Then>
+        </Case>
+      </Switch>
+    </Derived>
+  </Fact>
+
+  </Facts>
+</FactDictionaryModule>
