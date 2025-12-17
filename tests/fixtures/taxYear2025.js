@@ -14,11 +14,11 @@ export const taxYear2025 = {
    */
   federalEitc: {
     maxAmountByChildren: {
-      0: 649,      // No qualifying children
-      1: 4328,     // One qualifying child
-      2: 7152,     // Two qualifying children
-      3: 8046,     // Three or more qualifying children
-    }
+      0: 649, // No qualifying children
+      1: 4328, // One qualifying child
+      2: 7152, // Two qualifying children
+      3: 8046, // Three or more qualifying children
+    },
   },
 
   /**
@@ -26,7 +26,7 @@ export const taxYear2025 = {
    * Source: IRS Publication 972
    */
   federalCtc: {
-    maxRefundablePerChild: 1700,  // Maximum refundable CTC per qualifying child
+    maxRefundablePerChild: 1700, // Maximum refundable CTC per qualifying child
   },
 
   /**
@@ -34,20 +34,20 @@ export const taxYear2025 = {
    * Maryland allows ITIN holders to claim a percentage of federal EITC
    */
   marylandEitc: {
-    percentageOfFederal: 0.50,  // MD EITC is 50% of federal EITC
-  }
-}
+    percentageOfFederal: 0.5, // MD EITC is 50% of federal EITC
+  },
+};
 
 /**
  * Helper function to calculate Federal CTC for multiple children
  */
 export function calculateFederalCtc(numChildren) {
-  return taxYear2025.federalCtc.maxRefundablePerChild * numChildren
+  return taxYear2025.federalCtc.maxRefundablePerChild * numChildren;
 }
 
 /**
  * Helper function to calculate Maryland EITC based on federal amount
  */
 export function calculateMarylandEitc(federalEitcAmount) {
-  return federalEitcAmount * taxYear2025.marylandEitc.percentageOfFederal
+  return federalEitcAmount * taxYear2025.marylandEitc.percentageOfFederal;
 }

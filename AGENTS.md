@@ -35,9 +35,9 @@ The basic components of credit-calc are:
 
 - HTML should be styled using the US Web Design System (USWDS) 3.0, which is
 documented here: https://designsystem.digital.gov/
-- All code should follow the format and linting directives defined in the
-  project's .pre-commit-config.yaml file (pre-commit hooks that can be run
-  via `prek run`)
+- All code should follow the Biome-based format and linting directives defined
+  in the project's .pre-commit-config.yaml file (pre-commit hooks that can be
+  run via `prek run`)
 
 ## Development environment
 
