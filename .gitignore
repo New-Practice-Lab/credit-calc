@@ -1,2 +1,9 @@
+# OS
+.DS_Store
+
 # ignore claude local settings
 settings.local.json
+
+# related to testing
+node_modules/
+coverage/
