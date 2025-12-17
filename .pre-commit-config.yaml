@@ -17,6 +17,11 @@ repos:
   - id: detect-private-key
   - id: end-of-file-fixer
   - id: trailing-whitespace
+- repo: https://github.com/biomejs/pre-commit
+  rev: v2.3.9 # biome tag
+  hooks:
+  - id: biome-check
+    args: [--indent-style, "space"]
 - repo: https://github.com/codespell-project/codespell
   rev: v2.4.1
   hooks:
