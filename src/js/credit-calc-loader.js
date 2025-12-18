@@ -15,10 +15,10 @@ window.addEventListener("DOMContentLoaded", async () => {
     // Fetch multiple fact dictionary XML files
     const [demographicsResponse, eitcResponse, ctcResponse, mdEitcResponse] =
       await Promise.all([
-        fetch("../facts/credit-calc.xml"), // Shared demographics
-        fetch("../facts/federal-eitc.xml"), // EITC-specific facts
-        fetch("../facts/federal-ctc.xml"), // CTC-specific facts
-        fetch("../facts/md-eitc.xml"), // Maryland EITC-specific facts
+        fetch("./facts/credit-calc.xml"), // Shared demographics
+        fetch("./facts/federal-eitc.xml"), // EITC-specific facts
+        fetch("./facts/federal-ctc.xml"), // CTC-specific facts
+        fetch("./facts/md-eitc.xml"), // Maryland EITC-specific facts
       ]);
 
     const [demographicsXml, eitcXml, ctcXml, mdEitcXml] = await Promise.all([
