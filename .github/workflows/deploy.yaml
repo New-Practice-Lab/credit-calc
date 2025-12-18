@@ -1,5 +1,5 @@
 # Publish app to GitHub pages
-name: deploy credit calc
+name: Deploy Credit Calc
 on:
   push:
     branches: ["main"]
