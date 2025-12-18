@@ -284,10 +284,13 @@ describe("Tax Calculations - Federal CTC", () => {
     factGraph.set("/secondaryFilerTaxId", "Neither");
     factGraph.set("/numQualifyingChildren", 0);
 
+    const fedCtcIdCheck = factGraph.get("/filersHaveValidIdsForFederalCtc");
     const federalCtcMaxRefundableAmount = factGraph.get(
       "/federalCtcMaxRefundableAmount",
     );
 
+    // With 0 children, should be ineligible for CTC even with valid SSN
+    expect(extractFactGraphValue(fedCtcIdCheck)).toBe(false);
     expect(extractFactGraphValue(federalCtcMaxRefundableAmount)).toBe(0);
   });
 });

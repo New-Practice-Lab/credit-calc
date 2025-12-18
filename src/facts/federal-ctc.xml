@@ -20,31 +20,43 @@
   <!-- ============================================= -->
   <Fact path="/filersHaveValidIdsForFederalCtc">
     <Name>Filers Have Valid Tax Ids for Federal CTC</Name>
-    <Description>Filer(s) have Tax Ids required to qualify for federal CTC</Description>
+    <Description>Filer(s) have Tax Ids required to qualify for federal CTC and have at least one qualifying child</Description>
     <Derived>
-      <Switch>
-        <Case>
-          <When>
-            <Dependency module="creditCalc" path="/isFilingStatusMFJ"/>
-          </When>
-          <Then>
-            <!-- When MFJ, at least one filer needs SSN for CTC -->
-            <Any>
+      <All>
+        <!-- Must have at least one qualifying child -->
+        <GreaterThan>
+          <Left>
+            <Dependency module="creditCalc" path="/numQualifyingChildren"/>
+          </Left>
+          <Right>
+            <Int>0</Int>
+          </Right>
+        </GreaterThan>
+        <!-- Must have valid tax IDs -->
+        <Switch>
+          <Case>
+            <When>
+              <Dependency module="creditCalc" path="/isFilingStatusMFJ"/>
+            </When>
+            <Then>
+              <!-- When MFJ, at least one filer needs SSN for CTC -->
+              <Any>
+                <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
+                <Dependency module="creditCalc" path="/secondaryFilerHasValidSSN"/>
+              </Any>
+            </Then>
+          </Case>
+          <Case>
+            <When>
+              <True/>
+            </When>
+            <Then>
+              <!-- Only primary filer needs valid SSN for other filing statuses -->
               <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
-              <Dependency module="creditCalc" path="/secondaryFilerHasValidSSN"/>
-            </Any>
-          </Then>
-        </Case>
-        <Case>
-          <When>
-            <True/>
-          </When>
-          <Then>
-            <!-- Only primary filer needs valid SSN for other filing statuses -->
-            <Dependency module="creditCalc" path="/primaryFilerHasValidSSN"/>
-          </Then>
-        </Case>
-      </Switch>
+            </Then>
+          </Case>
+        </Switch>
+      </All>
     </Derived>
   </Fact>
 
