@@ -123,8 +123,7 @@
                         <label class="usa-label" for="filingState">State</label>
                         <span class="usa-hint">Select the state where you're filing</span>
                         <select class="usa-select" id="filingState" name="filingState" required>
-                            <option value="">-- Select State --</option>
-                            <option value="CO">Colorado (CO)</option>
+                            <option value="Federal" selected>Federal Only</option>
                             <option value="MD">Maryland (MD)</option>
                         </select>
                     </div>
@@ -134,8 +133,7 @@
                     <div class="usa-form-group">
                         <label class="usa-label" for="filingStatus">Filing Status</label>
                         <select class="usa-select" id="filingStatus" name="filingStatus" required>
-                            <option value="">-- Select Filing Status --</option>
-                            <option value="Single">Single</option>
+                            <option value="Single" selected>Single</option>
                             <option value="MarriedFilingJointly">Married Filing Jointly</option>
                             <option value="HeadOfHousehold">Head of Household</option>
                         </select>
@@ -147,8 +145,7 @@
                         <label class="usa-label" for="primaryFilerTaxId">Your Tax ID Type</label>
                         <span class="usa-hint">What type of tax identification do you have?</span>
                         <select class="usa-select" id="primaryFilerTaxId" name="primaryFilerTaxId" required>
-                            <option value="">-- Select Tax ID Type --</option>
-                            <option value="SSN">Social Security Number (SSN)</option>
+                            <option value="SSN" selected>Social Security Number (SSN)</option>
                             <option value="ITIN">Individual Taxpayer Identification Number (ITIN)</option>
                             <option value="Neither">Neither</option>
                         </select>
@@ -159,8 +156,7 @@
                             <label class="usa-label" for="secondaryFilerTaxId">Spouse's Tax ID Type</label>
                             <span class="usa-hint">What type of tax identification does your spouse have?</span>
                             <select class="usa-select" id="secondaryFilerTaxId" name="secondaryFilerTaxId">
-                                <option value="">-- Select Tax ID Type --</option>
-                                <option value="SSN">Social Security Number (SSN)</option>
+                                <option value="SSN" selected>Social Security Number (SSN)</option>
                                 <option value="ITIN">Individual Taxpayer Identification Number (ITIN)</option>
                                 <option value="Neither">Neither</option>
                             </select>
