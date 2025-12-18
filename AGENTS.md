@@ -60,6 +60,8 @@ npm run test:coverage   # Run tests with coverage report
 npm run test:ui         # Run tests with Vitest UI
 ```
 
+Tests also run as part of the ci.yaml GitHub workflow.
+
 ### Test Structure
 
 **Unit Tests** (`tests/unit/`)
@@ -141,3 +143,8 @@ results. This handles the Scala BigDecimal objects and Result monad wrapping.
 
 Note: Tests use fixture values from `tests/fixtures/taxYear2025.js`,
 not hardcoded numbers.
+
+## Deploymet
+
+Updates to this project are deployed to GitHub pages whenever a file in
+the `src/` directory changes and is merged to the `main` branch.
