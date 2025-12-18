@@ -292,6 +292,79 @@ describe("Tax Calculations - Federal CTC", () => {
   });
 });
 
+describe("Tax Calculations - Federal Only", () => {
+  it("should calculate only federal credits when Federal Only is selected", async () => {
+    const factGraph = await createFreshFactGraph();
+
+    factGraph.set("/filingState", "Federal");
+    factGraph.set("/filingStatus", "Single");
+    factGraph.set("/primaryFilerTaxId", "SSN");
+    factGraph.set("/secondaryFilerTaxId", "Neither");
+    factGraph.set("/numQualifyingChildren", 2);
+
+    const federalEitcMaxAmount = factGraph.get("/federalEitcMaxAmount");
+    const federalCtcMaxRefundableAmount = factGraph.get(
+      "/federalCtcMaxRefundableAmount",
+    );
+
+    const eitc = extractFactGraphValue(federalEitcMaxAmount);
+    const ctc = extractFactGraphValue(federalCtcMaxRefundableAmount);
+
+    // Verify federal credits are calculated
+    expect(eitc).toBe(taxYear2025.federalEitc.maxAmountByChildren[2]);
+    expect(ctc).toBe(calculateFederalCtc(2));
+
+    // Verify total
+    const total = eitc + ctc;
+    expect(total).toBe(
+      taxYear2025.federalEitc.maxAmountByChildren[2] + calculateFederalCtc(2),
+    );
+  });
+
+  it("should calculate federal credits with 0 children", async () => {
+    const factGraph = await createFreshFactGraph();
+
+    factGraph.set("/filingState", "Federal");
+    factGraph.set("/filingStatus", "Single");
+    factGraph.set("/primaryFilerTaxId", "SSN");
+    factGraph.set("/secondaryFilerTaxId", "Neither");
+    factGraph.set("/numQualifyingChildren", 0);
+
+    const federalEitcMaxAmount = factGraph.get("/federalEitcMaxAmount");
+    const federalCtcMaxRefundableAmount = factGraph.get(
+      "/federalCtcMaxRefundableAmount",
+    );
+
+    const eitc = extractFactGraphValue(federalEitcMaxAmount);
+    const ctc = extractFactGraphValue(federalCtcMaxRefundableAmount);
+
+    // Verify amounts
+    expect(eitc).toBe(taxYear2025.federalEitc.maxAmountByChildren[0]);
+    expect(ctc).toBe(0); // No CTC with 0 children
+  });
+
+  it("should not calculate federal EITC for ITIN holder with Federal Only", async () => {
+    const factGraph = await createFreshFactGraph();
+
+    factGraph.set("/filingState", "Federal");
+    factGraph.set("/filingStatus", "Single");
+    factGraph.set("/primaryFilerTaxId", "ITIN");
+    factGraph.set("/secondaryFilerTaxId", "Neither");
+    factGraph.set("/numQualifyingChildren", 2);
+
+    const fedEitcIdCheck = factGraph.get("/filersHaveValidIdsForFederalEitc");
+    const federalEitcMaxAmount = factGraph.get("/federalEitcMaxAmount");
+    const federalCtcMaxRefundableAmount = factGraph.get(
+      "/federalCtcMaxRefundableAmount",
+    );
+
+    // ITIN holders are not eligible for federal credits
+    expect(extractFactGraphValue(fedEitcIdCheck)).toBe(false);
+    expect(extractFactGraphValue(federalEitcMaxAmount)).toBe(0);
+    expect(extractFactGraphValue(federalCtcMaxRefundableAmount)).toBe(0);
+  });
+});
+
 describe("Tax Calculations - Combined Credits", () => {
   it("should calculate total for eligible Maryland SSN filer with 2 children", async () => {
     const factGraph = await createFreshFactGraph();
