@@ -15,6 +15,6 @@
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
     "happy-dom": "^20.9.0",
-    "vitest": "^4.0.16"
+    "vitest": "^4.1.7"
   }
 }
