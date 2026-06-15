@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "description": "Tax Credit Eligibility Calculator powered by Fact Graph",
+  "engines": {
+    "node": ">=20.19"
+  },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
