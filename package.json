@@ -15,7 +15,7 @@
     "test:integration": "vitest run tests/integration"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/coverage-v8": "^4.1.9",
     "@vitest/ui": "^4.0.16",
     "happy-dom": "^20.10.1",
     "vitest": "^4.1.8"
