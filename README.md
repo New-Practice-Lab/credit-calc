@@ -36,3 +36,28 @@ Some of the assumptions made by Credit Calc include:
 - Filer’s investment income is below the EITC threshold
 - Filers with 0 children are between the ages of 25 and 64
 - Filer cannot be claimed as a dependent of someone else
+
+## Development
+
+### Prerequisites
+
+Credit Calc requires [Node.js](https://nodejs.org/) 22 or later (see `engines`
+in `package.json`). The `.nvmrc` file pins the major version used for local
+development. If you use [nvm](https://github.com/nvm-sh/nvm):
+
+```bash
+nvm install   # installs the version in .nvmrc (first time only)
+nvm use       # activates it in the current shell
+```
+
+Other version managers that read `.nvmrc` (such as fnm) also work. If you
+already have Node 22+ installed, you don't need a version manager.
+
+### Setup and tests
+
+```bash
+npm install
+npm test
+```
+
+CI runs the tests on Node 22 and 24.

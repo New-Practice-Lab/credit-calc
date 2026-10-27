@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Tax Credit Eligibility Calculator powered by Fact Graph",
   "engines": {
-    "node": ">=20.19"
+    "node": ">=22"
   },
   "scripts": {
     "test": "vitest run",
