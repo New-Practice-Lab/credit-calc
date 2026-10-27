@@ -41,8 +41,22 @@ documented here: https://designsystem.digital.gov/
 
 ## Development environment
 
+The project requires Node.js 22 or later (enforced via `engines` in
+`package.json`). The `.nvmrc` file pins the local development version. Before
+running any npm command, make sure a compatible Node is active:
+
+- Check with `node -v`.
+- If Node is missing or too old and nvm is available, run `nvm install` and
+  `nvm use` (they read `.nvmrc`). Run these as separate commands, not as a
+  prefix to npm commands.
+- Don't install or upgrade Node globally without asking the user.
+
 The project uses npm for testing and dependency management.
 Run `npm install` to install dependencies.
+
+The CI matrix in `.github/workflows/ci.yaml` tests Node 22 and 24. When
+changing the supported Node range, update `.nvmrc`, `engines` in
+`package.json` and `package-lock.json`, and that matrix together.
 
 ## Testing instructions
 
